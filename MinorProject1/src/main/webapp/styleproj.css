@@ -1,0 +1,178 @@
+@charset "UTF-8";
+html {
+  scroll-behavior: smooth;
+   }
+   
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #18191a;
+      position: fixed;
+      top : -70px;
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .navbar ul li a:hover {
+      color: orange;
+    }
+
+    /* Section Styles */
+    section {
+      display: none;
+      padding: 60px 10%;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    #home {
+  height: 80vh; /* smaller banner height */
+  background-image: url('image-sir.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+}
+
+   
+
+    #home h1 {
+      color: #e8e5e1;
+      font-size: 40px;
+    }
+
+    #home p {
+      font-size: 18px;
+      color: #eee8e9;
+    }
+
+    /* Careers Section */
+    #careers {
+  background-color: white;
+  padding: 60px 10%;
+}
+
+
+    #careers h2 {
+      color: #004080;
+    }
+
+    .career-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .job-card {
+      background-color: #f0f6ff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .job-card h3 {
+      color: #004080;
+      margin-bottom: 10px;
+    }
+
+    .job-card button {
+      background-color: #004080;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .job-card button:hover {
+      background-color: #ffcc00;
+      color: #004080;
+    }
+    #hii p {
+   width : 80% ;
+   margin : 0 auto 30px auto;
+   color : #fff;
+}
+  .get-started-btn {
+  display: block;
+  margin: 40px auto;
+  padding: 12px 25px;
+  background-color: orange;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.decorative-line {
+  width: 120px; /* total width of the line */
+  height: 3px;  /* line thickness */
+  margin: 0 auto 8px auto; /* center and add space below */
+  border-radius: 2px;
+  background: linear-gradient(to right,
+  grey 0%,
+    grey 45%,
+    orange 45%,
+    orange 55%,
+    grey 55%,
+    grey 100%
+    );     /* right gray */
+}
+.content {
+    color: #333;  /* all text in dark grey */
+    font-family: Arial, sans-serif;  /* optional, for consistency */
+}
+
+.content h4 {
+    color: #333;  /* headings same color as paragraphs */
+}
+
+.content p {
+    line-height: 1.5;
+    color: #4a4747;
+    line-height: 1.3;  /* for tighter line spacing */
+    margin: 0;  /* remove extra paragraph spacing */
+}
+

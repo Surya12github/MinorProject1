@@ -1,0 +1,344 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f6f8;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #1e1e2f;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin: 20px 0;
+      color: orange;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: white;
+      padding: 15px 20px;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: orange;
+      color: white;
+    }
+
+    /* Main content */
+    .main {
+      margin-left: 220px;
+      padding: 20px;
+      flex: 1;
+    }
+
+    header {
+      background-color: white;
+      padding: 15px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* Dashboard cards */
+    .cards {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      width: 250px;
+      height: 130px;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.3s ease, background-color 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background-color: #ffe4b3;
+      cursor: pointer;
+    }
+
+    .card h3 {
+      color: #333;
+      margin: 0;
+    }
+
+    .card p {
+      margin: 10px 0 0;
+      font-size: 16px;
+      color: #555;
+    }
+
+    /* Leaves Section */
+    #leavesSection {
+      display: none;
+    }
+
+    .container {
+      width: 90%;
+      margin: 40px auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    .container h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .leaves-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .card-box {
+      background: #ffb347;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .apply-section {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    select, input[type="date"], button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: orange;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: white;
+      color: orange;
+      border: 1px solid orange;
+    }
+
+    .remaining {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<%
+String empid = (String) session.getAttribute("empid");
+String deptid = (String) session.getAttribute("deptid");
+String empname = (String) session.getAttribute("empname");
+%>
+
+<h3>Welcome, <%= empname %> (Emp ID: <%= empid %>, Dept ID: <%= deptid %>)</h3>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>TechVision</h2>
+    <a href="#" onclick="showSection('dashboard')">🏠 Dashboard</a>
+    <a href="#" onclick="showSection('leavesSection')">🌿 Leaves</a>
+    <a href="#">📅 Attendance</a>
+    <a href="#">💼 Projects</a>
+    <a href="#">⚙️ Settings</a>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Dashboard Section -->
+    <div id="dashboard">
+      <header>Welcome to Employee Dashboard</header>
+
+      <div class="cards">
+        <div class="card">
+          <h3>My Profile</h3>
+          <p>View and edit personal info</p>
+        </div>
+
+        <div class="card" onclick="showSection('leavesSection')">
+          <h3>Leaves</h3>
+          <p>Paid: 10 | Sick: 10</p>
+        </div>
+
+        <div class="card">
+          <h3>Attendance</h3>
+          <p>View monthly records</p>
+        </div>
+
+        <div class="card">
+          <h3>Projects</h3>
+          <p>Check your assigned tasks</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaves Section -->
+    <div id="leavesSection">
+      <div class="container">
+        <h2>Leaves Section</h2>
+
+        <div class="leaves-info">
+          <div class="card-box">Paid Leaves: <span id="paidLeaves">10</span></div>
+          <div class="card-box">Sick Leaves: <span id="sickLeaves">10</span></div>
+          <div class="card-box">Paternity Leaves: <span id="paternityLeaves">5</span></div>
+          <div class="card-box">Maternity Leaves: <span id="maternityLeaves">6</span></div>
+        </div>
+
+        <div class="apply-section">
+          <h3>Apply for Leave</h3>
+          
+         <!--<form action="leaveservlet" method="post"> -->
+         <form action="leaveservlet" method="post" id="leaveForm" > 
+        <label for="start_date">Start Date:</label>
+       <input type="date" id="start_date" name="start_date" required><br><br>
+
+       <label for="end_date">End Date:</label>
+       <input type="date" id="end_date" name="end_date" required><br><br>
+
+       <label for="leave_type">Leave Type:</label>
+       <select id="leave_type" name="leave_type" required>
+      <option value="">--Select Type--</option>
+      <option value="paid">Paid Leave</option>
+      <option value="sick">Sick Leave</option>
+      <option value="paternity">Paternity Leave</option>
+      <option value="maternity">Maternity Leave</option>
+      </select><br><br>
+
+      <label for="num_leaves">Number of Leaves:</label>
+      <input type="number" id="num_leaves" name="num_leaves" min="1" required oninvalid="alert('Please enter number of leaves')"><br><br>      
+
+      <input type="submit" value="Apply Leave">
+      </form>
+          
+        <div class="remaining" id="remainingInfo">
+          Remaining Leaves will appear here.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+let paidLeaves = 10;
+let sickLeaves = 10;
+let paternityLeaves = 5;
+let maternityLeaves = 6;
+
+function applyLeave(event) {
+  event.preventDefault(); // Prevent page reload
+
+  const type = document.getElementById("leave_type").value;
+  const from = document.getElementById("start_date").value;
+  const to = document.getElementById("end_date").value;
+
+  if (!type || !from || !to) {
+    alert("Please select leave type and dates.");
+    return;
+  }
+
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+  const diffDays = (toDate - fromDate) / (1000 * 60 * 60 * 24) + 1;
+
+  if (diffDays <= 0) {
+    alert("Invalid date range!");
+    return;
+  }
+
+  // Update frontend remaining leaves
+  if (type === "paid" && paidLeaves >= diffDays) paidLeaves -= diffDays;
+  else if (type === "sick" && sickLeaves >= diffDays) sickLeaves -= diffDays;
+  else if (type === "paternity" && paternityLeaves >= diffDays) paternityLeaves -= diffDays;
+  else if (type === "maternity" && maternityLeaves >= diffDays) maternityLeaves -= diffDays;
+  else {
+    alert("Not enough remaining leaves!");
+    return;
+  }
+
+  // Display updated counts
+  document.getElementById("paidLeaves").textContent = paidLeaves;
+  document.getElementById("sickLeaves").textContent = sickLeaves;
+  document.getElementById("paternityLeaves").textContent = paternityLeaves;
+  document.getElementById("maternityLeaves").textContent = maternityLeaves;
+  document.getElementById("remainingInfo").textContent =
+    `Remaining → Paid: ${paidLeaves}, Sick: ${sickLeaves}, Paternity: ${paternityLeaves}, Maternity: ${maternityLeaves}`;
+
+  // ✅ Send to backend servlet
+    
+    fetch("<%= request.getContextPath() %>/leaveservlet", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `leave_type=${type}&start_date=${from}&end_date=${to}&num_leaves=${diffDays}`
+  })
+  .then(response => response.text())
+  .then(data => {
+    console.log(data);
+    alert("✅ Leave applied successfully!");
+    // optional redirect
+    // window.location.reload();
+  })
+  .catch(error => console.error("Error:", error));
+}
+
+// Sidebar toggle logic
+function showSection(sectionId) {
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("leavesSection").style.display = "none";
+  document.getElementById(sectionId).style.display = "block";
+}
+
+showSection('dashboard');
+</script>
+</body>
+</html>
+    
