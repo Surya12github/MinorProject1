@@ -143,7 +143,7 @@
       margin-top: 20px;
     }
 
-    select, input[type="date"], button {
+    select, input[type="date"], button, input[type="number"] {
       padding: 10px;
       margin: 10px;
       border-radius: 8px;
@@ -238,31 +238,31 @@ String empname = (String) session.getAttribute("empname");
         <div class="apply-section">
           <h3>Apply for Leave</h3>
           
-         <!--<form action="leaveservlet" method="post"> -->
-         <form action="leaveservlet" method="post" id="leaveForm" > 
-        <label for="start_date">Start Date:</label>
-       <input type="date" id="start_date" name="start_date" required><br><br>
+          <form id="leaveForm" onsubmit="applyLeave(event)"> 
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" required><br><br>
 
-       <label for="end_date">End Date:</label>
-       <input type="date" id="end_date" name="end_date" required><br><br>
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date" required><br><br>
 
-       <label for="leave_type">Leave Type:</label>
-       <select id="leave_type" name="leave_type" required>
-      <option value="">--Select Type--</option>
-      <option value="paid">Paid Leave</option>
-      <option value="sick">Sick Leave</option>
-      <option value="paternity">Paternity Leave</option>
-      <option value="maternity">Maternity Leave</option>
-      </select><br><br>
+            <label for="leave_type">Leave Type:</label>
+            <select id="leave_type" name="leave_type" required>
+              <option value="">--Select Type--</option>
+              <option value="paid">Paid Leave</option>
+              <option value="sick">Sick Leave</option>
+              <option value="paternity">Paternity Leave</option>
+              <option value="maternity">Maternity Leave</option>
+            </select><br><br>
 
-      <label for="num_leaves">Number of Leaves:</label>
-      <input type="number" id="num_leaves" name="num_leaves" min="1" required oninvalid="alert('Please enter number of leaves')"><br><br>      
+            <label for="num_leaves">Number of Leaves:</label>
+            <input type="number" id="num_leaves" name="num_leaves" min="1" required><br><br>      
 
-      <input type="submit" value="Apply Leave">
-      </form>
+            <input type="submit" value="Apply Leave">
+          </form>
           
-        <div class="remaining" id="remainingInfo">
-          Remaining Leaves will appear here.
+          <!--  <div class="remaining" id="remainingInfo">-->
+            <!-- Remaining Leaves will appear here. -->
+          <!--</div>-->
         </div>
       </div>
     </div>
@@ -275,14 +275,15 @@ let paternityLeaves = 5;
 let maternityLeaves = 6;
 
 function applyLeave(event) {
-  event.preventDefault(); // Prevent page reload
+  event.preventDefault();
 
   const type = document.getElementById("leave_type").value;
   const from = document.getElementById("start_date").value;
   const to = document.getElementById("end_date").value;
+  const num = document.getElementById("num_leaves").value;
 
-  if (!type || !from || !to) {
-    alert("Please select leave type and dates.");
+  if (!type || !from || !to || !num) {
+    alert("Please fill all fields!");
     return;
   }
 
@@ -295,7 +296,7 @@ function applyLeave(event) {
     return;
   }
 
-  // Update frontend remaining leaves
+  // Update frontend
   if (type === "paid" && paidLeaves >= diffDays) paidLeaves -= diffDays;
   else if (type === "sick" && sickLeaves >= diffDays) sickLeaves -= diffDays;
   else if (type === "paternity" && paternityLeaves >= diffDays) paternityLeaves -= diffDays;
@@ -305,32 +306,33 @@ function applyLeave(event) {
     return;
   }
 
-  // Display updated counts
   document.getElementById("paidLeaves").textContent = paidLeaves;
   document.getElementById("sickLeaves").textContent = sickLeaves;
   document.getElementById("paternityLeaves").textContent = paternityLeaves;
   document.getElementById("maternityLeaves").textContent = maternityLeaves;
-  document.getElementById("remainingInfo").textContent =
+  //document.getElementById("remainingInfo").textContent =
     `Remaining → Paid: ${paidLeaves}, Sick: ${sickLeaves}, Paternity: ${paternityLeaves}, Maternity: ${maternityLeaves}`;
 
-  // ✅ Send to backend servlet
-    
-    fetch("<%= request.getContextPath() %>/leaveservlet", {
+  // ✅ Send JSON to backend servlet
+  fetch("<%= request.getContextPath() %>/leaveservlet", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `leave_type=${type}&start_date=${from}&end_date=${to}&num_leaves=${diffDays}`
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      leave_type: type,
+      start_date: from,
+      end_date: to,
+      num_leaves: diffDays
+    })
   })
   .then(response => response.text())
   .then(data => {
-    console.log(data);
+    console.log("Response:", data);
     alert("✅ Leave applied successfully!");
-    // optional redirect
-    // window.location.reload();
   })
   .catch(error => console.error("Error:", error));
 }
 
-// Sidebar toggle logic
+// Sidebar logic
 function showSection(sectionId) {
   document.getElementById("dashboard").style.display = "none";
   document.getElementById("leavesSection").style.display = "none";
@@ -341,4 +343,3 @@ showSection('dashboard');
 </script>
 </body>
 </html>
-    
